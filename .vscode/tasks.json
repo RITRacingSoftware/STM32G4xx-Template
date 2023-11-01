@@ -1,0 +1,44 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Clean",
+			"type": "shell",
+			"command": "./scripts/clean.sh",
+			"windows": {
+				"command": ".\\scripts\\clean.cmd"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Setup",
+			"type": "shell",
+			"command": "./scripts/setup.sh",
+			"windows": {
+				"command": ".\\scripts\\setup.cmd"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "./scripts/build.sh",
+			"windows": {
+				"command": ".\\scripts\\build.cmd"
+			},
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		}
+	]
+}

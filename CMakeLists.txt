@@ -11,12 +11,12 @@ project(RITRacing-SSDB
 
 set(EXECUTABLE_NAME "ssdb")
 
-set(CUBE_DIR "lib/STM32CubeF0")
+set(CUBE_DIR "lib/STM32CubeG4")
 
 # Collect sources
 file(GLOB_RECURSE STARTUP_SOURCES src/*.s)
 file(GLOB_RECURSE APP_SOURCES src/*.c)
-file(GLOB_RECURSE CUBE_SOURCES ${CUBE_DIR}/Drivers/STM32F0xx_HAL_Driver/Src/*.c)
+file(GLOB_RECURSE CUBE_SOURCES ${CUBE_DIR}/Drivers/STM32G4xx_HAL_Driver/Src/*.c)
 list(FILTER CUBE_SOURCES EXCLUDE REGEX "template")
 
 set(EXECUTABLE_ELF ${EXECUTABLE_NAME}.elf)
@@ -35,18 +35,18 @@ target_compile_options(${EXECUTABLE_ELF} PRIVATE
 
 target_compile_definitions(${EXECUTABLE_ELF} PRIVATE
 	-DUSE_HAL_DRIVER
-	-DSTM32F091xx
-	-DSTM32F091xC
+	-DSTM32G473xx
+	-DSTM32G47373
 )
 
 target_include_directories(${EXECUTABLE_ELF} PRIVATE
 	src
-	${CUBE_DIR}/Drivers/STM32F0xx_HAL_Driver/Inc
-	${CUBE_DIR}/Drivers/CMSIS/Device/ST/STM32F0xx/Include
+	${CUBE_DIR}/Drivers/STM32G4xx_HAL_Driver/Inc
+	${CUBE_DIR}/Drivers/CMSIS/Device/ST/STM32G4xx/Include
 	${CUBE_DIR}/Drivers/CMSIS/Include
 )
 
-set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/src/STM32F091RCTx_FLASH.ld)
+set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32G473RETx_FLASH.ld)
 
 target_link_options(${EXECUTABLE_ELF} PRIVATE
 	-mcpu=cortex-m0

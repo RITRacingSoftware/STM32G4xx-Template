@@ -34,11 +34,15 @@
 			"windows": {
 				"command": ".\\scripts\\build.cmd"
 			},
-			"group": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"presentation": {
 				"reveal": "always",
 				"panel": "new"
-			}
+			},
+			"problemMatcher": []
 		}
 	]
 }

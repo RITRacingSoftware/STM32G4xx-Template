@@ -3,6 +3,8 @@
 #include <stdbool.h>
 
 #include <stm32g4xx_hal.h>
+#include "FreeRTOS.h"
+#include "task.h"
 
 static void SystemClock_Config()
 {
@@ -58,24 +60,52 @@ static void MX_GPIO_Init(void)
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
+void heartbeat_task(void *pvParameters) {
+	(void) pvParameters;
+	while(true)
+	{
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
+		vTaskDelay(500); // Sleep 0.5s
+	}
+}
+
 int main(void)
 {
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
 
-	while (true)
-	{
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
-		HAL_Delay(500);
-	}
+	int err = xTaskCreate(heartbeat_task, 
+        "heartbeat", 
+        1000,
+        NULL,
+        4,
+        NULL);
+    if (err != pdPASS) {
+        Error_Handler();
+    }
+
+	NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+
+    // hand control over to FreeRTOS
+    vTaskStartScheduler();
+
+    // we should not get here ever
+    Error_Handler();
+}
+
+// Called when stack overflows from rtos
+// Not needed in header, since included in FreeRTOS-Kernel/include/task.h
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName)
+{
+	(void) xTask;
+	(void) pcTaskName;
+
+    Error_Handler();
 }
 
 void Error_Handler(void)
 {
 	__disable_irq();
-	while (1)
-	{
-
-	}
+	while (true) {}
 }

@@ -1,7 +1,5 @@
 FROM ubuntu:22.04
 
-WORKDIR /ssdb
-
 RUN --mount=type=cache,target=/var/lib/apt/lists \
 --mount=type=cache,target=/var/cache/apt \
 apt-get update && \
@@ -10,6 +8,8 @@ cmake \
 gcc-arm-none-eabi \
 gdb-multiarch \
 openocd
+
+WORKDIR /ssdb
 
 # Setup user
 ARG UID=1000

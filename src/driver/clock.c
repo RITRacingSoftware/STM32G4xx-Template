@@ -1,13 +1,12 @@
-#include "main.h"
+#include "clock.h"
 
 #include <stdbool.h>
 
-#include <stm32g4xx_hal.h>
-#include "FreeRTOS.h"
-#include "task.h"
+#include "stm32g4xx_hal.h"
 
-static void SystemClock_Config()
-{
+bool Clock_init() {
+	HAL_Init();
+
 	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
@@ -29,7 +28,7 @@ static void SystemClock_Config()
 	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
 
 	/** Initializes the CPU, AHB and APB buses clocks
@@ -43,69 +42,11 @@ static void SystemClock_Config()
 
 	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
 	{
-		Error_Handler();
+		return false;
 	}
 
 	// Initialize peripheral clocks
 	__HAL_RCC_GPIOA_CLK_ENABLE();
-}
 
-static void MX_GPIO_Init(void)
-{
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = GPIO_PIN_3;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-}
-
-void heartbeat_task(void *pvParameters) {
-	(void) pvParameters;
-	while(true)
-	{
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
-		vTaskDelay(500); // Sleep 0.5s
-	}
-}
-
-int main(void)
-{
-	HAL_Init();
-	SystemClock_Config();
-	MX_GPIO_Init();
-
-	int err = xTaskCreate(heartbeat_task, 
-        "heartbeat", 
-        1000,
-        NULL,
-        4,
-        NULL);
-    if (err != pdPASS) {
-        Error_Handler();
-    }
-
-	NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-
-    // hand control over to FreeRTOS
-    vTaskStartScheduler();
-
-    // we should not get here ever
-    Error_Handler();
-}
-
-// Called when stack overflows from rtos
-// Not needed in header, since included in FreeRTOS-Kernel/include/task.h
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName)
-{
-	(void) xTask;
-	(void) pcTaskName;
-
-    Error_Handler();
-}
-
-void Error_Handler(void)
-{
-	__disable_irq();
-	while (true) {}
+	return true;
 }

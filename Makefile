@@ -23,17 +23,17 @@ STM32_LD_FLAGS := $(STM32_COMMON_FLAGS) -static -Wl,--gc-sections -T $(STM32_LD_
 
 
 # Sources
-MAIN_SRC := src/main.c
-MAIN_INC := -I src
-STM32_MAIN_OBJ := $(MAIN_SRC:%.c=$(STM32_BUILD_DIR)/obj/%.o)
-
 APP_DIR := src/app
 APP_SRCS := $(shell find $(APP_DIR) -type f -name "*.c")
-APP_ASMS := $(shell find $(APP_DIR) -type f -name "*.s")
 APP_INCLUDE := -I $(APP_DIR)
-STM32_APP_OBJS := $(APP_SRCS:%=$(STM32_BUILD_DIR)/obj/%.o) $(APP_ASMS:%=$(STM32_BUILD_DIR)/obj/%.o)
+STM32_APP_OBJS := $(APP_SRCS:$(APP_DIR)%=$(STM32_BUILD_DIR)/obj/app/%.o)
 
-# Library locations
+DRIVER_DIR := src/driver
+DRIVER_SRCS := $(shell find $(DRIVER_DIR) -type f -name "*.c")
+DRIVER_INCLUDE := -I $(DRIVER_DIR)
+STM32_DRIVER_OBJS := $(DRIVER_SRCS:$(DRIVER_DIR)/%=$(STM32_BUILD_DIR)/obj/driver/%.o)
+
+# Libraries
 STM32CUBE_DIR := lib/STM32CubeG4
 STM32CUBE_HAL_DIR := $(STM32CUBE_DIR)/Drivers/STM32G4xx_HAL_Driver
 STM32CUBE_CMSIS_DIR := $(STM32CUBE_DIR)/Drivers/CMSIS/Device/ST/STM32G4xx
@@ -63,37 +63,33 @@ $(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).bin: $(STM32_BUILD_DIR)/$(
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_OBJCOPY) -O binary $< $@
 
-$(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).elf: $(STM32_MAIN_OBJ) $(STM32_APP_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS)
+$(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).elf: $(STM32_APP_OBJS) $(STM32_DRIVER_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS)
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_LD) $(STM32_LD_FLAGS) $^ -o $@
 
-# main.c
-$(STM32_MAIN_OBJ): $(MAIN_SRC)
-	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_CC_FLAGS) $(MAIN_INC) $(APP_INCLUDE) $(STM32CUBE_INCLUDES) $(FREERTOS_INCLUDES) -c $< -o $@
-
-# app sources
+# application objects
 $(STM32_BUILD_DIR)/obj/app/%.c.o: $(APP_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_CC_FLAGS) $(MAIN_INC) $(APP_INCLUDE) $(STM32CUBE_INCLUDES) -c $< -o $@
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(APP_INCLUDE) $(DRIVER_INCLUDE) $(FREERTOS_INCLUDES) -c $< -o $@
 
-$(STM32_BUILD_DIR)/obj/app/%.s.o: $(APP_DIR)/%.s
+# driver objects
+$(STM32_BUILD_DIR)/obj/driver/%.c.o: $(DRIVER_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_ASM_FLAGS) -c $< -o $@
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(DRIVER_INCLUDE) $(STM32CUBE_INCLUDES) -c $< -o $@
 
-# stm32cube sources
+# stm32cube objects
 $(STM32_BUILD_DIR)/obj/stm32cube/%.c.o: $(STM32CUBE_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_CC_FLAGS) $(MAIN_INC) $(STM32CUBE_INCLUDES) -c $< -o $@
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(STM32CUBE_INCLUDES) -c $< -o $@
 
 $(STM32_BUILD_DIR)/obj/stm32cube/%.s.o: $(STM32CUBE_DIR)/%.s
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_CC) $(STM32_ASM_FLAGS) -c $< -o $@
 
-# freertos
+# freertos objects
 $(STM32_BUILD_DIR)/obj/freertos/%.c.o: $(FREERTOS_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_CC_FLAGS) $(MAIN_INC) $(FREERTOS_INCLUDES) -c $< -o $@
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(FREERTOS_INCLUDES) -c $< -o $@
 
 # Misc
 .PHONY: clean

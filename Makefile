@@ -26,7 +26,7 @@ STM32_LD_FLAGS := $(STM32_COMMON_FLAGS) -static -Wl,--gc-sections -T $(STM32_LD_
 APP_DIR := src/app
 APP_SRCS := $(shell find $(APP_DIR) -type f -name "*.c")
 APP_INCLUDE := -I $(APP_DIR)
-STM32_APP_OBJS := $(APP_SRCS:$(APP_DIR)%=$(STM32_BUILD_DIR)/obj/app/%.o)
+STM32_APP_OBJS := $(APP_SRCS:$(APP_DIR)/%=$(STM32_BUILD_DIR)/obj/app/%.o)
 
 DRIVER_DIR := src/driver
 DRIVER_SRCS := $(shell find $(DRIVER_DIR) -type f -name "*.c")
@@ -50,6 +50,7 @@ FREERTOS_SRCS := $(shell find $(FREERTOS_SRC_DIRS) -maxdepth 1 -type f -name "*.
 FREERTOS_INCLUDES := $(FREERTOS_DIR)/include $(FREERTOS_DIR)/portable/GCC/ARM_CM4F
 FREERTOS_INCLUDES := $(foreach d, $(FREERTOS_INCLUDES),-I $d)
 FREERTOS_OBJS := $(FREERTOS_SRCS:$(FREERTOS_DIR)/%=$(STM32_BUILD_DIR)/obj/freertos/%.o)
+
 
 # Compilation targets
 .PHONY: all
@@ -91,7 +92,7 @@ $(STM32_BUILD_DIR)/obj/freertos/%.c.o: $(FREERTOS_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(FREERTOS_INCLUDES) -c $< -o $@
 
-# Misc
+# Misc targets
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR)

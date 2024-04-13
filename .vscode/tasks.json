@@ -4,9 +4,9 @@
 		{
 			"label": "Clean",
 			"type": "shell",
-			"command": "./scripts/clean.sh",
+			"command": "./scripts/run-in-docker.sh scripts/clean.sh",
 			"windows": {
-				"command": ".\\scripts\\clean.cmd"
+				"command": ".\\scripts\\run-in-docker.cmd scripts/clean.sh"
 			},
 			"presentation": {
 				"reveal": "always",
@@ -30,10 +30,24 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "./scripts/build.sh",
+			"command": "./scripts/run-in-docker.sh scripts/build.sh",
 			"windows": {
-				"command": ".\\scripts\\build.cmd"
+				"command": ".\\scripts\\run-in-docker.cmd scripts/build.sh"
 			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+		{
+			"label": "Flash",
+			"type": "shell",
+			"command": "./scripts/flash.sh",
 			"group": {
 				"kind": "build",
 				"isDefault": true

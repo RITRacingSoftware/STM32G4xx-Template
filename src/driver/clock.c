@@ -47,6 +47,8 @@ bool Clock_init() {
 
 	// Initialize peripheral clocks
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_I2C1_CLK_ENABLE();
 
 	return true;
 }

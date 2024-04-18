@@ -4,6 +4,7 @@
 
 #include "clock.h"
 #include "gpio.h"
+#include "i2c.h"
 #include "interrupts.h"
 
 #include "FreeRTOS.h"
@@ -14,16 +15,33 @@ void heartbeat_task(void *pvParameters) {
 	(void) pvParameters;
 	while(true)
 	{
-		GPIO_toggle_heartbeat();
-		vTaskDelay(500); // Sleep 0.5s
+		uint8_t buf[6];
+		I2C_register_read(0, 0x53, 0x32, &buf, 6);
+
+		int a = 0;
+
+		//uint16_t x = ((uint16_t) buf1) << 16 | buf2;
+
+		GPIO_set_heartbeat((buf[0]/128) == 0);
+		// vTaskDelay(500); // Sleep 0.5s
 	}
 }
 
 int main(void)
 {
-	Clock_init();
+	if (!Clock_init()) {
+		Error_Handler();
+	}
 	GPIO_init();
+	if (!I2C_init()) {
+		Error_Handler();
+	}
 	Interrupts_init();
+
+	for (int i = 0; i < 1000000; i++) {}
+
+	uint8_t buf = 0b00001000;
+	I2C_register_write(0, 0x53, 0x2d, &buf, 1);
 
 	int err = xTaskCreate(heartbeat_task, 
         "heartbeat", 

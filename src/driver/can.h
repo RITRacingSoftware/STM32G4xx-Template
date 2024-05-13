@@ -1,6 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 
-void CAN_init();
-void CAN_send(uint32_t id, uint64_t data);
+bool CAN_init();
+bool CAN_send(uint32_t id, uint8_t dlc, uint64_t data);

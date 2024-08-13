@@ -18,7 +18,7 @@ void heartbeat_task(void *pvParameters) {
 	{
 		// CAN_send(0, 8, 0x0123456789abcdef);
 		GPIO_toggle_heartbeat();
-		vTaskDelay(500 / portTICK_PERIOD_MS);
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
 	}
 }
 

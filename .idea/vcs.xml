@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/FreeRTOS-Kernel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/FreeRTOS-Kernel/portable/ThirdParty/Community-Supported-Ports" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/FreeRTOS-Kernel/portable/ThirdParty/Partner-Supported-Ports" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/STM32CubeG4" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/STM32CubeG4/Drivers/BSP/B-G474E-DPOW1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/STM32CubeG4/Drivers/BSP/STM32G474E-EVAL" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/STM32CubeG4/Drivers/BSP/STM32G4xx_Nucleo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/STM32CubeG4/Drivers/CMSIS/Device/ST/STM32G4xx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/STM32CubeG4/Drivers/STM32G4xx_HAL_Driver" vcs="Git" />
+  </component>
+</project>

@@ -16,7 +16,9 @@ void heartbeat_task(void *pvParameters) {
 	(void) pvParameters;
 	while(true)
 	{
-		CAN_send(0, 8, 0x0123456789abcdef);
+		// CAN_send(0, 8, 0x0123456789abcdef);
+		GPIO_toggle_heartbeat();
+		vTaskDelay(500 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -34,11 +36,6 @@ int main(void)
 		Error_Handler();
 	}
 	Interrupts_init();
-
-	// App modules
-	//OutboardAccelerometers_init();
-
-	for (int i = 0; i < 1000000; i++) {}
 
 	int err = xTaskCreate(heartbeat_task, 
         "heartbeat", 

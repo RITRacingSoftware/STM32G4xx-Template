@@ -8,7 +8,7 @@ void GPIO_init(void)
 {
 	// Heartbeat LED
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = GPIO_PIN_3;
+	GPIO_InitStruct.Pin = GPIO_PIN_5;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -31,9 +31,9 @@ void GPIO_init(void)
 }
 
 void GPIO_toggle_heartbeat(void) {
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
+	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 }
 
 void GPIO_set_heartbeat(bool state) {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }

@@ -4,12 +4,12 @@ cmake_minimum_required(VERSION 3.0)
 # Setup toolchain
 set(CMAKE_TOOLCHAIN_FILE "CMakeToolchain.txt")
 
-project(RITRacing-SSDB
+project(RITRacing-temp
 	VERSION 32
 	LANGUAGES C CXX ASM
 )
 
-set(EXECUTABLE_NAME "ssdb")
+set(EXECUTABLE_NAME "temp")
 
 set(CUBE_DIR "lib/STM32CubeG4")
 

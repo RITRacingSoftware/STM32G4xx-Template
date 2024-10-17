@@ -1,0 +1,62 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Clean",
+			"type": "shell",
+			"command": "./scripts/run-in-docker.sh scripts/clean.sh",
+			"windows": {
+				"command": ".\\scripts\\run-in-docker.cmd scripts/clean.sh"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Setup",
+			"type": "shell",
+			"command": "./scripts/setup.sh",
+			"windows": {
+				"command": ".\\scripts\\setup.cmd"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "./scripts/run-in-docker.sh scripts/build.sh",
+			"windows": {
+				"command": ".\\scripts\\run-in-docker.cmd scripts/build.sh"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+		{
+			"label": "Flash",
+			"type": "shell",
+			"command": "./scripts/flash.sh",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+	]
+}

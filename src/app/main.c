@@ -1,71 +1,64 @@
 #include "main.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "can.h"
 #include "clock.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "interrupts.h"
+#include "spi.h"
+#include "error_handler.h"
 
 #include "FreeRTOS.h"
+#include "queue.h"
 #include "task.h"
+
+#include <stm32g4xx_hal.h>
 
 
 void heartbeat_task(void *pvParameters) {
-	(void) pvParameters;
-	while(true)
-	{
-		// CAN_send(0, 8, 0x0123456789abcdef);
-		GPIO_toggle_heartbeat();
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-	}
+    (void) pvParameters;
+    while(true) {
+        core_GPIO_toggle_heartbeat();
+        vTaskDelay(100 * portTICK_PERIOD_MS);
+    }
 }
 
-int main(void)
-{
-	// Drivers
-	if (!Clock_init()) {
-		Error_Handler();
-	}
-	GPIO_init();
-	if (!I2C_init()) {
-		Error_Handler();
-	}
-	if (!CAN_init()) {
-		Error_Handler();
-	}
-	Interrupts_init();
+int main(void) {
+    HAL_Init();
 
-	int err = xTaskCreate(heartbeat_task, 
-        "heartbeat", 
+    // Drivers
+    core_heartbeat_init(GPIOB, GPIO_PIN_9);
+    core_GPIO_set_heartbeat(GPIO_PIN_RESET);
+
+    if (!core_clock_init()) error_handler();
+
+    int err = xTaskCreate(heartbeat_task,
+        "heartbeat",
         1000,
         NULL,
         4,
         NULL);
     if (err != pdPASS) {
-        Error_Handler();
+        error_handler();
     }
+
+    NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 
     // hand control over to FreeRTOS
     vTaskStartScheduler();
 
     // we should not get here ever
-    Error_Handler();
+    error_handler();
+    return 1;
 }
 
 // Called when stack overflows from rtos
 // Not needed in header, since included in FreeRTOS-Kernel/include/task.h
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName)
-{
-	(void) xTask;
-	(void) pcTaskName;
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName) {
+    (void) xTask;
+    (void) pcTaskName;
 
-    Error_Handler();
-}
-
-void Error_Handler(void)
-{
-	Interrupts_disable();
-	while (true) {}
+    error_handler();
 }

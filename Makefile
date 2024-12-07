@@ -1,4 +1,4 @@
-PROJECT_NAME := spin_test
+PROJECT_NAME := template
 PROJECT_VERSION := f33
 
 # Build info
@@ -107,3 +107,8 @@ $(STM32_BUILD_DIR)/obj/core/%.c.o: $(CORE_DIR)/%.c
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR)
+
+.PHONY: clean-user
+clean-user:
+	rm -r $(BUILD_DIR)/stm32/obj/app
+	rm -r $(BUILD_DIR)/stm32/obj/core

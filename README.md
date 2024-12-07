@@ -3,8 +3,14 @@
 ## Overview
 This is a Github template with everything needed to make a new STM32G4xx project from scratch.
 This is not meant to be edited with production code.
-To use it, go to the Github website view of this repository, and in the top right corner, 
-create a clone of this template with the "Use This Template" button.
+
+## Setup
+ 1. Go to the Github website view of this repository, and in the top right corner, create a
+    clone of this template with the "Use This Template" button.
+ 2. Clone the newly created repository to your computer.
+ 3. Run the setup script (`./scripts/setup.sh`) with the new name of the project as its
+    argument.
+ 4. Confirm that the project works by running `make`
 
 ## Requirements
 ### Windows-Specific:

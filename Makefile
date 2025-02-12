@@ -57,22 +57,27 @@ CORE_INCLUDES := -I $(CORE_DIR)/Inc $(STM32CUBE_INCLUDES) $(FREERTOS_INCLUDES)
 CORE_INCLUDES := $(foreach d, $(CORE_INCLUDES),-I $d)
 CORE_OBJS :=  $(CORE_SRCS:$(CORE_DIR)/%=$(STM32_BUILD_DIR)/obj/core/%.o)
 
+OUTNAME := $(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION)
 
 # Compilation targets
 .PHONY: all
-all: spin_test
+all: main
 
-.PHONY: spin_test
-spin_test: $(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).elf $(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).bin
+.PHONY: main
+main: $(OUTNAME).elf $(OUTNAME).bin $(OUTNAME).ihex
 
 # Main executable
-$(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).bin: $(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).elf
+$(OUTNAME).bin: $(OUTNAME).elf
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_OBJCOPY) -O binary $< $@
 
-$(STM32_BUILD_DIR)/$(PROJECT_NAME)-$(PROJECT_VERSION).elf: $(STM32_APP_OBJS) $(STM32_DRIVER_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS) $(CORE_OBJS)
+$(OUTNAME).elf: $(STM32_APP_OBJS) $(STM32_DRIVER_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS) $(CORE_OBJS)
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_LD) $(STM32_LD_FLAGS) $^ -o $@
+
+$(OUTNAME).ihex: $(OUTNAME).elf
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	$(STM32_OBJCOPY) -O ihex $< $@
 
 # application objects
 $(STM32_BUILD_DIR)/obj/app/%.c.o: $(APP_DIR)/%.c

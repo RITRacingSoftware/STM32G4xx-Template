@@ -52,8 +52,9 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
+/* Highest address of the user mode stack (highest address reserved for the 
+ * boot state */
+_estack = ORIGIN(RAM) + LENGTH(RAM) - 4;
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -61,7 +62,7 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 96K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 512K
 }
 
@@ -102,6 +103,7 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
+
   .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
   .ARM (READONLY) : {
     __exidx_start = .;
@@ -129,6 +131,7 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
+  
 
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -144,6 +147,12 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
+
+  .progname 0x0803ffe0 (READONLY) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.progname))
+  } >FLASH
 
   
   /* Uninitialized data section */
@@ -171,6 +180,12 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
+  } >RAM
+  
+  .bootstate 0x20017ffc (NOLOAD):
+  {
+    . = ALIGN(4);
+    *(.bootstate)
   } >RAM
 
   

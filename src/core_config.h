@@ -1,12 +1,12 @@
 #ifndef CORE_CORE_CONFIG_H
 #define CORE_CORE_CONFIG_H
 
-#define PROGRAM_NAME_STRING "Bootloader test"
+#define PROGRAM_NAME_STRING "Template project"
 
 /*** CLOCK CONFIG PARAMETERS ***/
 
-#define CORE_CLOCK_USE_HSE
-#define CORE_CLOCK_HSE_FREQ 25000
+#define CORE_CLOCK_USE_HSE 1
+#define CORE_CLOCK_HSE_FREQ 24000
 #define CORE_CLOCK_SYSCLK_FREQ 160000
 #define CORE_CLOCK_HSI_FREQ 16000
 
@@ -119,7 +119,7 @@
 #define CORE_USART_RXBUFLEN 512
 #define CORE_USART_RX_TIMEOUT 64
 
-#define CORE_USART_UPRINTF
+#define CORE_USART_UPRINTF 1
 #define CORE_USART_TXBUFLEN 512
 
 #define CORE_USART1_PORT GPIOC
@@ -140,5 +140,9 @@
 #define CORE_BOOT_FDCAN_ID 0x004
 #define CORE_BOOT_FDCAN_MASTER_ID 0x084
 #define CORE_BOOT_FDCAN_BROADCAST_ID 0x7ff
+
+/********************* TIMEOUT PARAMETERS **********************/
+/***************************************************************/
+#define CORE_TIMEOUT_NUM 0
 
 #endif //CORE_CORE_CONFIG_H

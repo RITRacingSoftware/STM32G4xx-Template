@@ -52,9 +52,18 @@ FREERTOS_INCLUDES := $(foreach d, $(FREERTOS_INCLUDES),-I $d)
 FREERTOS_OBJS := $(FREERTOS_SRCS:$(FREERTOS_DIR)/%=$(STM32_BUILD_DIR)/obj/freertos/%.o)
 
 RTT_DIR := ../RTT
+ifneq ("$(wildcard $(RTT_DIR))","")
 RTT_SRCS := $(RTT_DIR)/RTT/SEGGER_RTT.c $(RTT_DIR)/Syscalls/SEGGER_RTT_Syscalls_GCC.c $(RTT_DIR)/RTT/SEGGER_RTT_printf.c
 RTT_INCLUDES := $(addprefix -I, ./src) $(addprefix -I, $(RTT_DIR)/RTT)
 RTT_OBJS := $(RTT_SRCS:$(RTT_DIR)/%=$(STM32_BUILD_DIR)/obj/rtt/%.o)
+endif
+
+DBC_DIR := ../Formula-DBC
+ifneq ("$(wildcard $(DBC_DIR))","")
+DBC_SRCS := $(shell find -L $(DBC_DIR)/c_files -name "*.c")
+DBC_INCLUDES := -I $(DBC_DIR)/c_files
+DBC_OBJS := $(DBC_SRCS:$(DBC_DIR)/c_files/%=$(STM32_BUILD_DIR)/obj/formula_dbc/%.o)
+endif
 
 CORE_DIR := ../core/src/driver
 CORE_SRCS := $(shell find $(CORE_DIR)/Src -type f -name "*.c")
@@ -76,7 +85,7 @@ $(OUTNAME).bin: $(OUTNAME).elf
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_OBJCOPY) -O binary $< $@
 
-$(OUTNAME).elf: $(STM32_APP_OBJS) $(STM32_DRIVER_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS) $(CORE_OBJS)
+$(OUTNAME).elf: $(STM32_APP_OBJS) $(STM32_DRIVER_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS) $(CORE_OBJS) $(RTT_OBJS) $(DBC_OBJS)
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_LD) $(STM32_LD_FLAGS) $^ -o $@
 
@@ -87,12 +96,12 @@ $(OUTNAME).ihex: $(OUTNAME).elf
 # application objects
 $(STM32_BUILD_DIR)/obj/app/%.c.o: $(APP_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(APP_INCLUDE) $(DRIVER_INCLUDE) $(FREERTOS_INCLUDES) $(CORE_INCLUDES) $(RTT_INCLUDES) -c $< -o $@
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(APP_INCLUDE) $(DRIVER_INCLUDE) $(FREERTOS_INCLUDES) $(CORE_INCLUDES) $(RTT_INCLUDES) $(DBC_INCLUDES) -c $< -o $@
 
 # driver objects
 $(STM32_BUILD_DIR)/obj/driver/%.c.o: $(DRIVER_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(DRIVER_INCLUDE) $(STM32CUBE_INCLUDES) $(CORE_INCLUDES) $(RTT_INCLUDES) -c $< -o $@
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(DRIVER_INCLUDE) $(STM32CUBE_INCLUDES) $(CORE_INCLUDES) $(RTT_INCLUDES) $(DBC_INCLUDES) -c $< -o $@
 
 # stm32cube objects
 $(STM32_BUILD_DIR)/obj/stm32cube/%.c.o: $(STM32CUBE_DIR)/%.c
@@ -112,6 +121,11 @@ $(STM32_BUILD_DIR)/obj/freertos/%.c.o: $(FREERTOS_DIR)/%.c
 $(STM32_BUILD_DIR)/obj/core/%.c.o: $(CORE_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(STM32CUBE_INCLUDES) $(CORE_INCLUDES) -c $< -o $@
+
+# dbc objects
+$(STM32_BUILD_DIR)/obj/formula_dbc/%.c.o: $(DBC_DIR)/c_files/%.c
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(DBC_INCLUDES) -c $< -o $@
 
 # RTT objects
 $(STM32_BUILD_DIR)/obj/rtt/%.c.o: $(RTT_DIR)/%.c

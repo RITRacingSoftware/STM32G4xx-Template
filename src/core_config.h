@@ -3,19 +3,21 @@
 
 #define PROGRAM_NAME_STRING "Template project"
 
-/*** CLOCK CONFIG PARAMETERS ***/
-
+/***************** CLOCK PARAMETERS ****************************/
+/***************************************************************/
 #define CORE_CLOCK_USE_HSE 1
 #define CORE_CLOCK_HSE_FREQ 24000
 #define CORE_CLOCK_SYSCLK_FREQ 160000
 #define CORE_CLOCK_HSI_FREQ 16000
+#define CORE_CLOCK_PLLP_DIV 12
 
-/*** ERROR HANDLER PARAMETERS ***/
-#define ERROR_HANDLER_BLINK_DELAY 200000
+/***************** ERROR HANDLER PARAMETERS ********************/
+/***************************************************************/
+#define CORE_ERROR_HANDLER_BLINK_DELAY 200000
 
 
-/*** CAN CONFIG PARAMETERS ***/
-
+/********************** CAN PARAMETERS *************************/
+/***************************************************************/
 // CAN bitrate in Hz
 #define CORE_CAN_BITRATE 1000000
 
@@ -65,7 +67,8 @@
 #define CORE_FDCAN2_USE_FD 1
 #define CORE_FDCAN3_USE_FD 0
 
-/*** SPI CONFIG PARAMETERS ***/
+/********************* SPI PARAMETERS **************************/
+/***************************************************************/
 #define CORE_SPI1_SCK_PORT  GPIOA
 #define CORE_SPI1_SCK_PIN   GPIO_PIN_5
 #define CORE_SPI1_SCK_AF    5
@@ -77,6 +80,7 @@
 #define CORE_SPI1_MOSI_AF   5
 #define CORE_SPI1_DIVIDER   7
 #define CORE_SPI1_DATA_SIZE 8
+#define CORE_SPI1_MASTER    1
 
 #define CORE_SPI2_SCK_PORT  GPIOB
 #define CORE_SPI2_SCK_PIN   GPIO_PIN_13
@@ -89,6 +93,7 @@
 #define CORE_SPI2_MOSI_AF   5
 #define CORE_SPI2_DIVIDER   7
 #define CORE_SPI2_DATA_SIZE 8
+#define CORE_SPI2_MASTER    1
 
 #define CORE_SPI3_SCK_PORT  GPIOC
 #define CORE_SPI3_SCK_PIN   GPIO_PIN_10
@@ -101,6 +106,7 @@
 #define CORE_SPI3_MOSI_AF   6
 #define CORE_SPI3_DIVIDER   7
 #define CORE_SPI3_DATA_SIZE 8
+#define CORE_SPI3_MASTER    1
 
 #define CORE_SPI4_SCK_PORT  GPIOE
 #define CORE_SPI4_SCK_PIN   GPIO_PIN_12
@@ -113,9 +119,11 @@
 #define CORE_SPI4_MOSI_AF   5
 #define CORE_SPI4_DIVIDER   7
 #define CORE_SPI4_DATA_SIZE 8
+#define CORE_SPI4_MASTER    1
 
 
-/*** USART CONFIG PARAMETERS ***/
+/******************** USART PARAMETERS *************************/
+/***************************************************************/
 #define CORE_USART_RXBUFLEN 512
 #define CORE_USART_RX_TIMEOUT 64
 
@@ -124,25 +132,32 @@
 
 #define CORE_USART1_PORT GPIOC
 #define CORE_USART1_PINS (GPIO_PIN_4 | GPIO_PIN_5)
-//#define CORE_USART2_PORT GPIOB
-//#define CORE_USART2_PINS (GPIO_PIN_3 | GPIO_PIN_4)
 #define CORE_USART2_PORT GPIOA
 #define CORE_USART2_PINS (GPIO_PIN_3 | GPIO_PIN_2)
 #define CORE_USART3_PORT GPIOC
 #define CORE_USART3_PINS (GPIO_PIN_10 | GPIO_PIN_11)
 
 
-/*** RTC CONFIG PARAMETERS ***/
+/*********************** RTC PARAMETERS ************************/
+/***************************************************************/
 #define CORE_RTC_CENTURY 2000
 
-/*** BOOTLOADER CONFIG ***/
+
+/******************** BOOTLOADER PARAMETERS ********************/
+/***************************************************************/
 #define CORE_BOOT_FDCAN FDCAN2
 #define CORE_BOOT_FDCAN_ID 0x004
 #define CORE_BOOT_FDCAN_MASTER_ID 0x084
 #define CORE_BOOT_FDCAN_BROADCAST_ID 0x7ff
 
+
 /********************* TIMEOUT PARAMETERS **********************/
 /***************************************************************/
 #define CORE_TIMEOUT_NUM 0
+
+
+/******************** TIMESTAMP PARAMETERS *********************/
+/***************************************************************/
+#define CORE_TIMESTAMP_MSB TIM2
 
 #endif //CORE_CORE_CONFIG_H

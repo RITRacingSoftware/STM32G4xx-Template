@@ -87,7 +87,7 @@ $(OUTNAME).bin: $(OUTNAME).elf
 
 $(OUTNAME).elf: $(STM32_APP_OBJS) $(STM32_DRIVER_OBJS) $(STM32CUBE_OBJS) $(FREERTOS_OBJS) $(CORE_OBJS) $(RTT_OBJS) $(DBC_OBJS)
 	@[ -d $(@D) ] || mkdir -p $(@D)
-	$(STM32_LD) $(STM32_LD_FLAGS) $^ -o $@
+	$(STM32_LD) $(STM32_LD_FLAGS) $^ -o $@ -lc -lm
 
 $(OUTNAME).ihex: $(OUTNAME).elf
 	@[ -d $(@D) ] || mkdir -p $(@D)

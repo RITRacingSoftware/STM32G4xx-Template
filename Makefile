@@ -15,7 +15,7 @@ STM32_OBJCOPY := $(STM32_PREFIX)-objcopy
 STM32_OBJDUMP := $(STM32_PREFIX)-objdump
 
 # Cross-compilation options
-STM32_COMMON_FLAGS := -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -D USE_HAL_DRIVER -D STM32G473xx
+STM32_COMMON_FLAGS := -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -D USE_HAL_DRIVER -D STM32G441xx
 STM32_CC_FLAGS := $(STM32_COMMON_FLAGS) -ffreestanding -ffunction-sections -fdata-sections -Wall -Wextra -Werror=implicit-function-declaration -g
 STM32_ASM_FLAGS := $(STM32_CC_FLAGS)
 STM32_LD_SCRIPT := STM32G473RETx_FLASH.ld
@@ -39,10 +39,10 @@ STM32CUBE_HAL_DIR := $(STM32CUBE_DIR)/Drivers/STM32G4xx_HAL_Driver
 STM32CUBE_CMSIS_DIR := $(STM32CUBE_DIR)/Drivers/CMSIS/Device/ST/STM32G4xx
 STM32CUBE_SRC_DIRS := $(STM32CUBE_HAL_DIR)/Src
 STM32CUBE_SRCS := $(shell find $(STM32CUBE_SRC_DIRS) -maxdepth 1 -type f -name "*.c") $(STM32CUBE_CMSIS_DIR)/Source/Templates/system_stm32g4xx.c
-STM32CUBE_ASMS := src/startup_stm32g473xx.s
+STM32CUBE_ASMS := src/startup_stm32g441xx.s
 STM32CUBE_INCLUDES := $(STM32CUBE_HAL_DIR)/Inc $(STM32CUBE_DIR)/Drivers/CMSIS/Include $(STM32CUBE_CMSIS_DIR)/Include
 STM32CUBE_INCLUDES := $(foreach d, $(STM32CUBE_INCLUDES),-I $d)
-STM32CUBE_OBJS := $(STM32CUBE_SRCS:$(STM32CUBE_DIR)/%=$(STM32_BUILD_DIR)/obj/stm32cube/%.o) $(STM32_BUILD_DIR)/obj/stm32cube/startup_stm32g473xx.s.o
+STM32CUBE_OBJS := $(STM32CUBE_SRCS:$(STM32CUBE_DIR)/%=$(STM32_BUILD_DIR)/obj/stm32cube/%.o) $(STM32_BUILD_DIR)/obj/stm32cube/startup_stm32g441xx.s.o
 
 FREERTOS_DIR := ../FreeRTOS-Kernel
 FREERTOS_SRC_DIRS := $(FREERTOS_DIR) $(FREERTOS_DIR)/portable/GCC/ARM_CM4F
@@ -108,7 +108,7 @@ $(STM32_BUILD_DIR)/obj/stm32cube/%.c.o: $(STM32CUBE_DIR)/%.c
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_CC) $(STM32_CC_FLAGS) -I src $(STM32CUBE_INCLUDES) -c $< -o $@
 
-$(STM32_BUILD_DIR)/obj/stm32cube/startup_stm32g473xx.s.o: src/startup_stm32g473xx.s
+$(STM32_BUILD_DIR)/obj/stm32cube/startup_stm32g441xx.s.o: src/startup_stm32g441xx.s
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	$(STM32_CC) $(STM32_ASM_FLAGS) -c $< -o $@
 

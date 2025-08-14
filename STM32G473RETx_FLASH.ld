@@ -52,9 +52,8 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack (highest address reserved for the 
- * boot state */
-_estack = ORIGIN(RAM) + LENGTH(RAM) - 4;
+/* Highest address of the user mode stack */
+_estack = ORIGIN(RAM) + LENGTH(RAM);
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -62,8 +61,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 96K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 512K
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 32K
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 128K
 }
 
 /* Define output sections */
@@ -148,7 +147,7 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
 
-  .progname 0x0803ffe0 (READONLY) :
+  .progname 0x08007fe0 (READONLY) :
   {
     . = ALIGN(4);
     KEEP(*(.progname))
@@ -181,13 +180,6 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
-  
-  .bootstate 0x20017ffc (NOLOAD):
-  {
-    . = ALIGN(4);
-    *(.bootstate)
-  } >RAM
-
   
 
   /* Remove information from the standard libraries */

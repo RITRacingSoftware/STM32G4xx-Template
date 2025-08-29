@@ -18,7 +18,7 @@ STM32_OBJDUMP := $(STM32_PREFIX)-objdump
 STM32_COMMON_FLAGS := -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -D USE_HAL_DRIVER -D STM32G441xx
 STM32_CC_FLAGS := $(STM32_COMMON_FLAGS) -ffreestanding -ffunction-sections -fdata-sections -Wall -Wextra -Werror=implicit-function-declaration -g
 STM32_ASM_FLAGS := $(STM32_CC_FLAGS)
-STM32_LD_SCRIPT := STM32G473RETx_FLASH.ld
+STM32_LD_SCRIPT := STM32G441xBxx_FLASH.ld
 STM32_LD_FLAGS := $(STM32_COMMON_FLAGS) -static -Wl,--gc-sections -T $(STM32_LD_SCRIPT) -specs=nano.specs -specs=nosys.specs
 
 

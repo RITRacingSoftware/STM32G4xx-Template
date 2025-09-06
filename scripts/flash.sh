@@ -23,7 +23,6 @@ if [ $? == 0 ]; then
     rm .uploader_telnet_fifo;
     exit 0; 
 fi
-exit 1;
 
 echo -e "program -1 ${FNAME}.ihex\nexit" > .uploader_telnet_fifo &
 telnet localhost 4445 < .uploader_telnet_fifo | grep -q "Connected to"

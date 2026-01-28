@@ -15,6 +15,3 @@ This is not meant to be edited with production code.
 ## Requirements
 ### Windows-Specific:
 - [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
-- [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/)
-
-Not strictly required, but advised, is Github Desktop.
